@@ -1,0 +1,11 @@
+Webmana Connectors
+Copyright 2026 Webmana contributors
+
+This product includes software developed as part of the Webmana project
+(https://github.com/WebmanaProject/webmana).
+
+Licensed under the Apache License, Version 2.0. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0.
+
+These packages (the connector SDK) are distributed under Apache-2.0 and are
+independent of the Webmana application, which is licensed under AGPL-3.0.

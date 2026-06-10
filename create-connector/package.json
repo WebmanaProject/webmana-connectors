@@ -1,0 +1,17 @@
+{
+  "name": "create-webmana-connector",
+  "version": "0.1.0",
+  "description": "Scaffold a new Webmana connector package (Apache-2.0). Run: npm create webmana-connector <name>",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "create-webmana-connector": "./index.js"
+  },
+  "files": ["index.js", "README.md"],
+  "keywords": ["webmana", "webmana-connector", "scaffold", "cli"],
+  "scripts": {
+    "lint": "echo \"no lint configured\"",
+    "typecheck": "echo \"no typecheck (plain JS CLI)\"",
+    "build": "echo \"no build (plain JS CLI)\""
+  }
+}
