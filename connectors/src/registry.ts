@@ -15,6 +15,7 @@ import { snykConnector } from "./builtin/snyk.js";
 import { awsCostConnector } from "./builtin/aws-cost.js";
 import { githubConnector } from "./builtin/github.js";
 import { vercelConnector } from "./builtin/vercel.js";
+import { stripeConnector } from "./builtin/stripe.js";
 
 /** Connectors that ship in this repo, keyed by id. */
 const builtInConnectors: Record<string, Connector> = {
@@ -33,6 +34,7 @@ const builtInConnectors: Record<string, Connector> = {
   aws_cost: awsCostConnector,
   github: githubConnector,
   vercel: vercelConnector,
+  stripe: stripeConnector,
 } satisfies Record<ConnectorId, Connector>;
 
 /**
