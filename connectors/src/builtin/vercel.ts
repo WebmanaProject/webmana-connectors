@@ -1,5 +1,11 @@
 import { z } from "zod";
-import type { Connector, ConnectorResult, ConnectorRunContext } from "../types.js";
+import type {
+  ActionResult,
+  Connector,
+  ConnectorAction,
+  ConnectorResult,
+  ConnectorRunContext,
+} from "../types.js";
 
 const configSchema = z.object({
   /** Vercel project name or id. */
@@ -47,12 +53,69 @@ interface Deployment {
   url?: string;
 }
 
+const redeployInput = z.object({
+  /** Which environment to redeploy. */
+  target: z.enum(["production", "preview"]).default("production"),
+});
+
+/** Re-trigger the latest deployment for the project (SDK v2 action). */
+const redeployAction: ConnectorAction<z.infer<typeof redeployInput>> = {
+  id: "redeploy",
+  title: "Redeploy",
+  description: "Re-trigger Vercel's latest deployment for this project.",
+  inputSchema: redeployInput,
+  destructive: true,
+  async run(ctx: ConnectorRunContext, input): Promise<ActionResult> {
+    const { project, teamId, timeoutMs } = configSchema.parse(ctx.config);
+    const token = ctx.secrets?.token;
+    if (!token) return { ok: false, message: "missing Vercel token" };
+    const { target } = redeployInput.parse(input ?? {});
+    const team = teamId ? `?teamId=${encodeURIComponent(teamId)}` : "";
+    const headers = { authorization: `Bearer ${token}`, "content-type": "application/json", accept: "application/json" };
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      // 1) find the latest deployment's uid to redeploy.
+      const listParams = new URLSearchParams({ projectId: project, limit: "1" });
+      if (teamId) listParams.set("teamId", teamId);
+      const listRes = await fetch(`https://api.vercel.com/v6/deployments?${listParams.toString()}`, {
+        headers,
+        signal: controller.signal,
+      });
+      if (!listRes.ok) return { ok: false, message: `Vercel list failed: HTTP ${listRes.status}` };
+      const list = (await listRes.json()) as { deployments?: { uid?: string; id?: string }[] };
+      const uid = list.deployments?.[0]?.uid ?? list.deployments?.[0]?.id;
+      if (!uid) return { ok: false, message: "no deployment found to redeploy" };
+
+      // 2) create a new deployment from the existing one.
+      const res = await fetch(`https://api.vercel.com/v13/deployments${team}`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ name: project, deploymentId: uid, target }),
+        signal: controller.signal,
+      });
+      if (!res.ok) {
+        const body = await res.text().catch(() => "");
+        return { ok: false, message: `Vercel redeploy failed: HTTP ${res.status}${body ? ` ${body.slice(0, 200)}` : ""}` };
+      }
+      const created = (await res.json()) as { id?: string; url?: string };
+      return { ok: true, message: `redeploy triggered (${target})`, data: { id: created.id, url: created.url } };
+    } catch (err) {
+      return { ok: false, message: err instanceof Error ? err.message : String(err) };
+    } finally {
+      clearTimeout(timer);
+    }
+  },
+};
+
 export const vercelConnector: Connector<VercelRaw> = {
   id: "vercel",
   title: "Vercel Deployments",
   requiresSecrets: true,
   configSchema,
   defaultIntervalSeconds: 10 * 60, // 10 minutes
+  actions: [redeployAction],
 
   async fetch(ctx: ConnectorRunContext): Promise<VercelRaw> {
     const { project, teamId, timeoutMs } = configSchema.parse(ctx.config);

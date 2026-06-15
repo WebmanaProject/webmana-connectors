@@ -38,4 +38,36 @@ export interface Connector<Raw = unknown> {
   defaultIntervalSeconds: number;
   fetch(ctx: ConnectorRunContext): Promise<Raw>;
   normalize(raw: Raw, ctx: ConnectorRunContext): ConnectorResult;
+  /**
+   * SDK v2 (optional): two-way actions this connector can perform. The host app
+   * gates every invocation behind a capability grant + RBAC + an audit entry;
+   * a connector only implements the side effect.
+   */
+  actions?: ConnectorAction[];
+}
+
+/** Outcome of running a {@link ConnectorAction}. */
+export interface ActionResult {
+  ok: boolean;
+  /** Human-readable result or error message. */
+  message?: string;
+  /** Optional structured data (e.g. a deployment id). */
+  data?: Record<string, unknown>;
+}
+
+/**
+ * A two-way action exposed by a connector (SDK v2). Read connectors omit this.
+ * `inputSchema` validates the action's parameters and lets the host render a
+ * form; `destructive` forces an extra confirmation in the UI.
+ */
+export interface ConnectorAction<Input = unknown> {
+  /** Unique within the connector, lowercase slug, e.g. "redeploy". */
+  id: string;
+  title: string;
+  description?: string;
+  /** Zod schema validating the action input. */
+  inputSchema: ZodTypeAny;
+  /** Marks irreversible/high-impact actions for extra confirmation. */
+  destructive?: boolean;
+  run(ctx: ConnectorRunContext, input: Input): Promise<ActionResult>;
 }
