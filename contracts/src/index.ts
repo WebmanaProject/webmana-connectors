@@ -48,6 +48,11 @@ export const BUILT_IN_CONNECTOR_IDS = [
   // dev/deploy connectors (Phase 6)
   "github",
   "vercel",
+  "netlify",
+  // revenue / errors / analytics
+  "stripe",
+  "sentry",
+  "plausible",
 ] as const;
 
 /**

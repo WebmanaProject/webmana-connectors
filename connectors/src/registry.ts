@@ -9,6 +9,9 @@ import { namecheapConnector } from "./builtin/namecheap.js";
 import { emailAuthConnector } from "./builtin/email-auth.js";
 import { dnsblConnector } from "./builtin/dnsbl.js";
 import { certTransparencyConnector } from "./builtin/cert-transparency.js";
+import { netlifyConnector } from "./builtin/netlify.js";
+import { sentryConnector } from "./builtin/sentry.js";
+import { plausibleConnector } from "./builtin/plausible.js";
 import { pagespeedConnector } from "./builtin/pagespeed.js";
 import { uptimerobotConnector } from "./builtin/uptimerobot.js";
 import { cloudflareConnector } from "./builtin/cloudflare.js";
@@ -44,7 +47,10 @@ const builtInConnectors: Record<string, Connector> = {
   aws_cost: awsCostConnector,
   github: githubConnector,
   vercel: vercelConnector,
+  netlify: netlifyConnector,
   stripe: stripeConnector,
+  sentry: sentryConnector,
+  plausible: plausibleConnector,
 } satisfies Record<ConnectorId, Connector>;
 
 /**
