@@ -4,6 +4,8 @@ import { sslConnector } from "./builtin/ssl.js";
 import { uptimeConnector } from "./builtin/uptime.js";
 import { dnsConnector } from "./builtin/dns.js";
 import { whoisConnector } from "./builtin/whois.js";
+import { godaddyConnector } from "./builtin/godaddy.js";
+import { namecheapConnector } from "./builtin/namecheap.js";
 import { pagespeedConnector } from "./builtin/pagespeed.js";
 import { uptimerobotConnector } from "./builtin/uptimerobot.js";
 import { cloudflareConnector } from "./builtin/cloudflare.js";
@@ -23,6 +25,8 @@ const builtInConnectors: Record<string, Connector> = {
   uptime: uptimeConnector,
   dns: dnsConnector,
   whois: whoisConnector,
+  godaddy: godaddyConnector,
+  namecheap: namecheapConnector,
   pagespeed: pagespeedConnector,
   uptimerobot: uptimerobotConnector,
   cloudflare: cloudflareConnector,

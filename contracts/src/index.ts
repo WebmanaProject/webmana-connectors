@@ -28,6 +28,9 @@ export const BUILT_IN_CONNECTOR_IDS = [
   "whois",
   "dns",
   "uptime",
+  // registrar connectors
+  "godaddy",
+  "namecheap",
   // API connectors (Phase 2+)
   "cloudflare",
   "pagespeed",
