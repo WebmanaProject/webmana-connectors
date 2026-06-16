@@ -68,6 +68,8 @@ export const stripeConnector: Connector<StripeRaw> = {
   requiresSecrets: true,
   configSchema,
   defaultIntervalSeconds: 6 * 60 * 60, // 6 hours
+  meta: { vendor: "Stripe", category: "revenue", verified: true, docsUrl: "https://stripe.com/docs/api" },
+  auth: { kind: "api_key" },
 
   async fetch(ctx: ConnectorRunContext): Promise<StripeRaw> {
     const { maxPages, timeoutMs } = configSchema.parse(ctx.config);

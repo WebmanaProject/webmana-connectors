@@ -36,6 +36,10 @@ export interface Connector<Raw = unknown> {
   configSchema: ZodTypeAny;
   /** Default polling cadence in seconds; the worker enqueues when due. */
   defaultIntervalSeconds: number;
+  /** SDK v2 (optional): marketplace metadata for browsing/filtering. */
+  meta?: ConnectorMeta;
+  /** SDK v2 (optional): how the connector authenticates (defaults to api_key). */
+  auth?: ConnectorAuth;
   fetch(ctx: ConnectorRunContext): Promise<Raw>;
   normalize(raw: Raw, ctx: ConnectorRunContext): ConnectorResult;
   /**
@@ -44,6 +48,29 @@ export interface Connector<Raw = unknown> {
    * a connector only implements the side effect.
    */
   actions?: ConnectorAction[];
+}
+
+/** Marketplace metadata for a connector (SDK v2). */
+export interface ConnectorMeta {
+  /** Vendor/product name, e.g. "Stripe". */
+  vendor?: string;
+  /** Grouping category, e.g. "revenue", "deploy", "uptime", "security". */
+  category?: string;
+  /** Link to setup docs. */
+  docsUrl?: string;
+  /** True for connectors reviewed/maintained by the Webmana project. */
+  verified?: boolean;
+}
+
+/** How a connector authenticates (SDK v2). */
+export interface ConnectorAuth {
+  kind: "none" | "api_key" | "oauth2";
+  /** OAuth2 endpoints, when kind is "oauth2". */
+  oauth?: {
+    authorizeUrl: string;
+    tokenUrl: string;
+    scopes?: string[];
+  };
 }
 
 /** Outcome of running a {@link ConnectorAction}. */

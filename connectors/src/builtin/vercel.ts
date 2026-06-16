@@ -115,6 +115,8 @@ export const vercelConnector: Connector<VercelRaw> = {
   requiresSecrets: true,
   configSchema,
   defaultIntervalSeconds: 10 * 60, // 10 minutes
+  meta: { vendor: "Vercel", category: "deploy", verified: true, docsUrl: "https://vercel.com/docs/rest-api" },
+  auth: { kind: "api_key" },
   actions: [redeployAction],
 
   async fetch(ctx: ConnectorRunContext): Promise<VercelRaw> {
