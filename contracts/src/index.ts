@@ -31,6 +31,10 @@ export const BUILT_IN_CONNECTOR_IDS = [
   // registrar connectors
   "godaddy",
   "namecheap",
+  // keyless deliverability/security (DNS-based)
+  "email_auth",
+  "dnsbl",
+  "cert_transparency",
   // API connectors (Phase 2+)
   "cloudflare",
   "pagespeed",

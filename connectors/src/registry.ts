@@ -6,6 +6,9 @@ import { dnsConnector } from "./builtin/dns.js";
 import { whoisConnector } from "./builtin/whois.js";
 import { godaddyConnector } from "./builtin/godaddy.js";
 import { namecheapConnector } from "./builtin/namecheap.js";
+import { emailAuthConnector } from "./builtin/email-auth.js";
+import { dnsblConnector } from "./builtin/dnsbl.js";
+import { certTransparencyConnector } from "./builtin/cert-transparency.js";
 import { pagespeedConnector } from "./builtin/pagespeed.js";
 import { uptimerobotConnector } from "./builtin/uptimerobot.js";
 import { cloudflareConnector } from "./builtin/cloudflare.js";
@@ -27,6 +30,9 @@ const builtInConnectors: Record<string, Connector> = {
   whois: whoisConnector,
   godaddy: godaddyConnector,
   namecheap: namecheapConnector,
+  email_auth: emailAuthConnector,
+  dnsbl: dnsblConnector,
+  cert_transparency: certTransparencyConnector,
   pagespeed: pagespeedConnector,
   uptimerobot: uptimerobotConnector,
   cloudflare: cloudflareConnector,
