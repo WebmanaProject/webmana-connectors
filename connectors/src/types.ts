@@ -58,6 +58,8 @@ export interface ConnectorMeta {
   category?: string;
   /** Link to setup docs. */
   docsUrl?: string;
+  /** Direct link to where the provider's API key / token is created. */
+  apiKeyUrl?: string;
   /** True for connectors reviewed/maintained by the Webmana project. */
   verified?: boolean;
 }
